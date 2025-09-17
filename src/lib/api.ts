@@ -1,28 +1,37 @@
 import { Post } from "@/interfaces/post";
-import fs from "fs";
-import matter from "gray-matter";
-import { join } from "path";
+import { getBlogPosts, getBlogPost } from "@/lib/supabase";
 
-const postsDirectory = join(process.cwd(), "_posts");
-
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
+export async function getPostSlugs() {
+  const posts = await getBlogPosts();
+  return posts.map(post => post.slug);
 }
 
-export function getPostBySlug(slug: string) {
-  const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = join(postsDirectory, `${realSlug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(fileContents);
-
-  return { ...data, slug: realSlug, content } as Post;
+export async function getPostBySlug(slug: string): Promise<Post> {
+  const post = await getBlogPost(slug);
+  
+  // Transform Supabase post to match the existing Post interface
+  return {
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    coverImage: post.cover_image,
+    date: post.created_at || new Date().toISOString(),
+    slug: post.slug,
+    published: post.published,
+  } as Post;
 }
 
-export function getAllPosts(): Post[] {
-  const slugs = getPostSlugs();
-  const posts = slugs
-    .map((slug) => getPostBySlug(slug))
-    // sort posts by date in descending order
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return posts;
+export async function getAllPosts(): Promise<Post[]> {
+  const posts = await getBlogPosts();
+  
+  // Transform Supabase posts to match the existing Post interface
+  return posts.map(post => ({
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    coverImage: post.cover_image,
+    date: post.created_at || new Date().toISOString(),
+    slug: post.slug,
+    published: post.published,
+  })) as Post[];
 }

@@ -9,29 +9,34 @@ import { PostHeader } from "@/app/_components/post-header";
 
 export default async function Post(props: Params) {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
 
-  if (!post) {
+  try {
+    const post = await getPostBySlug(params.slug);
+
+    if (!post) {
+      return notFound();
+    }
+
+    // Since posts from database already have HTML content, we don't need markdown conversion
+    const content = post.content || "";
+
+    return (
+      <main>
+        <Container>
+          <article className="mb-32">
+            <PostHeader
+              title={post.title}
+              coverImage={post.coverImage}
+              date={post.date}
+            />
+            <PostBody content={content} />
+          </article>
+        </Container>
+      </main>
+    );
+  } catch (error) {
     return notFound();
   }
-
-  const content = await markdownToHtml(post.content || "");
-
-  return (
-    <main>
-      <Container>
-        <article className="mb-32">
-          <PostHeader
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            author={post.author}
-          />
-          <PostBody content={content} />
-        </article>
-      </Container>
-    </main>
-  );
 }
 
 type Params = {
@@ -42,27 +47,36 @@ type Params = {
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
 
-  if (!post) {
+  try {
+    const post = await getPostBySlug(params.slug);
+
+    if (!post) {
+      return notFound();
+    }
+
+    const title = `${post.title} | Convoy for a Cause`;
+
+    return {
+      title,
+      openGraph: {
+        title,
+        images: [post.coverImage],
+      },
+    };
+  } catch (error) {
     return notFound();
   }
-
-  const title = `${post.title} | Next.js Blog Example with ${CMS_NAME}`;
-
-  return {
-    title,
-    openGraph: {
-      title,
-      images: [post.ogImage.url],
-    },
-  };
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  try {
+    const posts = await getAllPosts();
 
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    return [];
+  }
 }

@@ -2,8 +2,8 @@ import Container from "@/app/_components/container";
 import { MoreStories } from "@/app/_components/more-stories";
 import { getAllPosts } from "@/lib/api";
 
-export default function Events() {
-    const allPosts = getAllPosts();
+export default async function Events() {
+    const allPosts = await getAllPosts();
 
     return (
         <main>

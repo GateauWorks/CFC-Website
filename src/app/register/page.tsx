@@ -1,6 +1,7 @@
 "use client";
 import Container from "@/app/_components/container";
 import { useState } from "react";
+import { submitRegistration, uploadImage, type Registration } from "@/lib/supabase";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ export default function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([]);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -47,15 +49,50 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      // Upload photos first if any
+      let photoUrls: string[] = [];
+      if (uploadedPhotos.length > 0) {
+        const uploadPromises = uploadedPhotos.map(photo =>
+          uploadImage(photo, 'car-photos')
+        );
+        photoUrls = await Promise.all(uploadPromises);
+      }
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-  };
+      // Prepare registration data
+      const registrationData: Omit<Registration, 'id' | 'created_at'> = {
+        event_slug: 'monterey-car-week-2025-rally', // Link to existing Monterey event
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        state: formData.state,
+        instagram: formData.instagram || undefined,
+        website: formData.website || undefined,
+        car_year: parseInt(formData.carYear),
+        car_make: formData.carMake,
+        car_model: formData.carModel,
+        car_color: formData.carColor,
+        has_rally_experience: formData.hasRallyExperience === 'yes',
+        previous_rallies: formData.previousRallies || undefined,
+        why_join: formData.whyJoin,
+        car_photos: photoUrls.length > 0 ? photoUrls : undefined,
+        status: 'pending'
+      };
 
-  if (isSubmitted) {
+      // Submit to Supabase
+      await submitRegistration(registrationData);
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Registration submission error:', error);
+      setSubmitError('Failed to submit registration. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }; if (isSubmitted) {
     return (
       <main>
         <Container>
@@ -398,6 +435,11 @@ export default function Register() {
 
             {/* Submit Button */}
             <div className="text-center">
+              {submitError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                  {submitError}
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={isSubmitting}

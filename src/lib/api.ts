@@ -15,7 +15,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     excerpt: post.excerpt,
     content: post.content,
     coverImage: post.cover_image,
-    date: post.created_at || new Date().toISOString(),
+    date: post.date || new Date().toISOString(),
     slug: post.slug,
     published: post.published,
   } as Post;
@@ -30,7 +30,7 @@ export async function getAllPosts(): Promise<Post[]> {
     excerpt: post.excerpt,
     content: post.content,
     coverImage: post.cover_image,
-    date: post.created_at || new Date().toISOString(),
+    date: post.date || new Date().toISOString(),
     slug: post.slug,
     published: post.published,
   })) as Post[];

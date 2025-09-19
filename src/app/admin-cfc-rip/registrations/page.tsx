@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatDateTimeForDisplay } from "@/lib/dateUtils";
+import AuthGuard from "../_components/AuthGuard";
 import AdminSidebar from "../_components/AdminSidebar";
 
 // Registration type
@@ -81,11 +83,12 @@ export default function AdminRegistrations() {
   }, [selectedSlug, statusFilter]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      <AdminSidebar active="registrations" />
-      <main className="flex-1 p-8">
+    <AuthGuard>
+      <div className="flex flex-col md:flex-row min-h-screen">
+        <AdminSidebar active="registrations" />
+      <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8">
         <h1 className="text-3xl font-bold mb-8">Registrations</h1>
-        <div className="flex gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <select
             value={selectedSlug}
             onChange={e => setSelectedSlug(e.target.value)}
@@ -185,7 +188,7 @@ export default function AdminRegistrations() {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-500">Registration Date</label>
-                      <p className="text-sm">{selectedRegistration.created_at ? new Date(selectedRegistration.created_at).toLocaleString() : ''}</p>
+                      <p className="text-sm">{formatDateTimeForDisplay(selectedRegistration.created_at)}</p>
                     </div>
                   </div>
                   {/* Status and Actions */}
@@ -296,5 +299,6 @@ export default function AdminRegistrations() {
         )}
       </main>
     </div>
+    </AuthGuard>
   );
 }

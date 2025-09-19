@@ -1,7 +1,8 @@
 "use client";
 import Container from "@/app/_components/container";
-import { useState } from "react";
-import { submitRegistration, uploadImage, type Registration } from "@/lib/supabase";
+import { useState, useEffect } from "react";
+import { submitRegistration, uploadImageWithValidation, getActiveEvent, type Registration, type BlogPost } from "@/lib/supabase";
+import { formatDateForDisplay } from "@/lib/dateUtils";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,22 @@ export default function Register() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [activeEvent, setActiveEvent] = useState<BlogPost | null>(null);
+  const [loadingEvent, setLoadingEvent] = useState(true);
+
+  useEffect(() => {
+    async function fetchActiveEvent() {
+      try {
+        const event = await getActiveEvent();
+        setActiveEvent(event);
+      } catch (error) {
+        console.error('Error fetching active event:', error);
+      } finally {
+        setLoadingEvent(false);
+      }
+    }
+    fetchActiveEvent();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,14 +73,17 @@ export default function Register() {
       let photoUrls: string[] = [];
       if (uploadedPhotos.length > 0) {
         const uploadPromises = uploadedPhotos.map(photo =>
-          uploadImage(photo, 'car-photos')
+          uploadImageWithValidation(photo, 'car-photos', {
+            maxSizeInMB: 10,
+            allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+          })
         );
         photoUrls = await Promise.all(uploadPromises);
       }
 
       // Prepare registration data
       const registrationData: Omit<Registration, 'id' | 'created_at'> = {
-        event_slug: 'monterey-car-week-2025-rally', // Link to existing Monterey event
+        event_slug: activeEvent?.slug || 'default-event',
         full_name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -101,7 +121,7 @@ export default function Register() {
               Registration Submitted!
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
-              Thank you for registering for the Monterey Car Week 2025 Rally. We'll review your application and get back to you within 2-3 business days.
+              Thank you for registering for {activeEvent?.title || 'our event'}. We'll review your application and get back to you within 2-3 business days.
             </p>
             <p className="text-lg text-gray-600">
               Keep an eye on your email for updates and event details.
@@ -120,16 +140,32 @@ export default function Register() {
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight mb-4">
               Register for Event
             </h1>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-              <h2 className="text-2xl font-bold mb-2">Monterey Car Week 2025 Rally</h2>
-              <p className="text-lg text-gray-700 mb-2">August 15, 2025 • Carmel-by-the-Sea, CA</p>
-              <p className="text-gray-600">
-                Join us for an unforgettable journey along the scenic California coastline. All proceeds benefit local children's charities.
-              </p>
-            </div>
+            {loadingEvent ? (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
+                <p className="text-gray-500">Loading event information...</p>
+              </div>
+            ) : activeEvent ? (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                <h2 className="text-2xl font-bold mb-2">{activeEvent.title}</h2>
+                <p className="text-lg text-gray-700 mb-2">
+                  {activeEvent.date ? formatDateForDisplay(activeEvent.date) : 'Date TBD'} • Location TBD
+                </p>
+                <p className="text-gray-600">
+                  {activeEvent.excerpt || 'Join us for an unforgettable rally experience. All proceeds benefit local charities.'}
+                </p>
+              </div>
+            ) : (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+                <h2 className="text-2xl font-bold mb-2">No Active Event</h2>
+                <p className="text-gray-700">
+                  There is currently no active event available for registration. Please check back later or contact us for more information.
+                </p>
+              </div>
+            )}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          {activeEvent && (
+            <form onSubmit={handleSubmit} className="space-y-8">
             {/* Personal Information */}
             <div className="bg-white p-6 rounded-lg border border-gray-200">
               <h3 className="text-xl font-semibold mb-4">Personal Information</h3>
@@ -452,6 +488,7 @@ export default function Register() {
               </p>
             </div>
           </form>
+          )}
         </div>
       </Container>
     </main>

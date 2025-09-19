@@ -75,7 +75,7 @@ export default function About() {
                             </p>
                         </section>
 
-                        <section className="text-center bg-gray-50 p-8 rounded-lg">
+                        <section className="text-center bg-gray-50 p-8 rounded-lg mb-5">
                             <h2 className="text-3xl font-bold mb-4">Join Our Convoy</h2>
                             <p className="text-lg leading-relaxed mb-6">
                                 Ready to be part of something meaningful? Whether you drive a classic car, a modern vehicle, or anything in between, there's a place for you in our convoy.

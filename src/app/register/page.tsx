@@ -5,6 +5,7 @@ import {
   submitRegistration,
   uploadImageWithValidation,
   getActiveEvent,
+  getUpcomingEvents,
   type Registration,
   type BlogPost,
 } from "@/lib/supabase";
@@ -33,20 +34,38 @@ export default function Register() {
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [activeEvent, setActiveEvent] = useState<BlogPost | null>(null);
-  const [loadingEvent, setLoadingEvent] = useState(true);
+  const [availableEvents, setAvailableEvents] = useState<BlogPost[]>([]);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
   useEffect(() => {
-    async function fetchActiveEvent() {
+    async function fetchEvents() {
       try {
-        const event = await getActiveEvent();
-        setActiveEvent(event);
+        const [activeEvent, upcomingEvents] = await Promise.all([
+          getActiveEvent(),
+          getUpcomingEvents(),
+        ]);
+
+        setActiveEvent(activeEvent);
+        setAvailableEvents(upcomingEvents);
+
+        // Auto-select the active event if it exists and is in the upcoming events
+        if (
+          activeEvent &&
+          upcomingEvents.some((event) => event.id === activeEvent.id)
+        ) {
+          setSelectedEventId(activeEvent.id || "");
+        } else if (upcomingEvents.length > 0) {
+          // Otherwise, select the first upcoming event
+          setSelectedEventId(upcomingEvents[0].id || "");
+        }
       } catch (error) {
-        console.error("Error fetching active event:", error);
+        console.error("Error fetching events:", error);
       } finally {
-        setLoadingEvent(false);
+        setLoadingEvents(false);
       }
     }
-    fetchActiveEvent();
+    fetchEvents();
   }, []);
 
   const handleInputChange = (
@@ -78,8 +97,22 @@ export default function Register() {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    // Validate that an event is selected
+    if (!selectedEventId) {
+      setSubmitError("Please select an event to register for.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate that at least one photo is uploaded
+    if (uploadedPhotos.length === 0) {
+      setSubmitError("Please upload at least one photo of your car.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      // Upload photos first if any
+      // Upload photos first
       let photoUrls: string[] = [];
       if (uploadedPhotos.length > 0) {
         const uploadPromises = uploadedPhotos.map((photo) =>
@@ -96,9 +129,14 @@ export default function Register() {
         photoUrls = await Promise.all(uploadPromises);
       }
 
+      // Find the selected event
+      const selectedEvent = availableEvents.find(
+        (event) => event.id === selectedEventId
+      );
+
       // Prepare registration data
       const registrationData: Omit<Registration, "id" | "created_at"> = {
-        event_slug: activeEvent?.slug || "default-event",
+        event_slug: selectedEvent?.slug || "default-event",
         full_name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -137,8 +175,10 @@ export default function Register() {
               Registration Submitted!
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
-              Thank you for registering for {activeEvent?.title || "our event"}.
-              We'll review your application and get back to you within 2-3
+              Thank you for registering for{" "}
+              {availableEvents.find((e) => e.id === selectedEventId)?.title ||
+                "our event"}
+              . We'll review your application and get back to you within 2-3
               business days.
             </p>
             <p className="text-lg text-gray-600">
@@ -158,36 +198,71 @@ export default function Register() {
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight mb-4">
               Register for Event
             </h1>
-            {loadingEvent ? (
+            {loadingEvents ? (
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
-                <p className="text-gray-500">Loading event information...</p>
+                <p className="text-gray-500">Loading available events...</p>
               </div>
-            ) : activeEvent ? (
+            ) : availableEvents.length > 0 ? (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-                <h2 className="text-2xl font-bold mb-2">{activeEvent.title}</h2>
-                <p className="text-lg text-gray-700 mb-2">
-                  {activeEvent.date
-                    ? formatDateForDisplay(activeEvent.date)
-                    : "Date TBD"}{" "}
-                  • Location TBD
+                <h2 className="text-2xl font-bold mb-4">Available Events</h2>
+                <p className="text-gray-700 mb-4">
+                  Choose which event you'd like to register for:
                 </p>
-                <p className="text-gray-600">
-                  {activeEvent.excerpt ||
-                    "Join us for an unforgettable rally experience. All proceeds benefit local charities."}
-                </p>
+                <select
+                  value={selectedEventId}
+                  onChange={(e) => setSelectedEventId(e.target.value)}
+                  className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-lg"
+                  required
+                >
+                  <option value="">Select an event...</option>
+                  {availableEvents.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.title}{" "}
+                      {event.date
+                        ? `- ${formatDateForDisplay(event.date)}`
+                        : "- Date TBD"}
+                    </option>
+                  ))}
+                </select>
+                {selectedEventId && (
+                  <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
+                    {(() => {
+                      const selected = availableEvents.find(
+                        (e) => e.id === selectedEventId
+                      );
+                      return selected ? (
+                        <>
+                          <h3 className="font-semibold text-lg mb-2">
+                            {selected.title}
+                          </h3>
+                          <p className="text-gray-600 mb-2">
+                            {selected.date
+                              ? formatDateForDisplay(selected.date)
+                              : "Date TBD"}{" "}
+                            • Location TBD
+                          </p>
+                          <p className="text-gray-700">
+                            {selected.excerpt ||
+                              "Join us for an unforgettable rally experience. All proceeds benefit local charities."}
+                          </p>
+                        </>
+                      ) : null;
+                    })()}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-                <h2 className="text-2xl font-bold mb-2">No Active Event</h2>
+                <h2 className="text-2xl font-bold mb-2">No Available Events</h2>
                 <p className="text-gray-700">
-                  There is currently no active event available for registration.
+                  There are currently no events available for registration.
                   Please check back later or contact us for more information.
                 </p>
               </div>
             )}
           </div>
 
-          {activeEvent && (
+          {availableEvents.length > 0 && (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information */}
               <div className="bg-white p-6 rounded-lg border border-gray-200">
@@ -412,18 +487,17 @@ export default function Register() {
 
               {/* Car Photos */}
               <div className="bg-white p-6 rounded-lg border border-gray-200">
-                <h3 className="text-xl font-semibold mb-4">
-                  Car Photos (Optional)
-                </h3>
+                <h3 className="text-xl font-semibold mb-4">Car Photos *</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Upload up to 3 photos of your car. This helps organizers
-                  verify your vehicle and may be used for promotional materials.
+                  Upload at least 1 photo of your car (up to 3 total). This
+                  helps organizers verify your vehicle and may be used for
+                  promotional materials.
                 </p>
 
                 {uploadedPhotos.length < 3 && (
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Add Photos ({uploadedPhotos.length}/3 uploaded)
+                      Add Photos ({uploadedPhotos.length}/3 uploaded) *
                     </label>
                     <input
                       type="file"

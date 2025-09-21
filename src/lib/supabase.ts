@@ -339,3 +339,25 @@ export async function getActiveEvent(): Promise<BlogPost | null> {
 
   return data as BlogPost;
 }
+
+export async function getUpcomingEvents(): Promise<BlogPost[]> {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("published", true)
+    .order("date", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching upcoming events:", error);
+    return [];
+  }
+
+  // Filter out past events (optional - you may want to allow registration for past events)
+  const today = new Date().toISOString().split("T")[0];
+  const upcomingEvents = data.filter((event) => {
+    if (!event.date) return true; // Include events without dates
+    return event.date >= today;
+  });
+
+  return upcomingEvents as BlogPost[];
+}

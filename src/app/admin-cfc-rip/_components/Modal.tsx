@@ -123,7 +123,7 @@ export function Modal({
 
   // Render modal in a portal to avoid z-index issues
   if (typeof window !== "undefined") {
-    return createPortal(modalContent, document.body);
+    return createPortal(modalContent, document.body) as ReactNode;
   }
 
   return null;

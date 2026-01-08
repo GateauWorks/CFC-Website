@@ -14,9 +14,9 @@ export default function About() {
             </p>
           </div>
 
-          <div className="prose prose-lg mx-auto">
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+          <div className="prose prose-lg mx-auto max-w-none">
+            <section className="mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Mission</h2>
               <p className="text-lg leading-relaxed mb-6">
                 Convoy for a Cause is a nonprofit organization dedicated to
                 organizing rallies and convoys that bring people together to
@@ -32,8 +32,8 @@ export default function About() {
               </p>
             </section>
 
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">Our Story</h2>
+            <section className="mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Story</h2>
               <p className="text-lg leading-relaxed mb-6">
                 Founded in 2023, Convoy for a Cause started with a simple idea:
                 combining the joy of driving with the power of giving back. Our
@@ -48,11 +48,11 @@ export default function About() {
               </p>
             </section>
 
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">What We Do</h2>
+            <section className="mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">What We Do</h2>
               <div className="grid md:grid-cols-2 gap-8 mb-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">
                     Charitable Rallies
                   </h3>
                   <p className="text-lg leading-relaxed">
@@ -61,8 +61,8 @@ export default function About() {
                     organizations.
                   </p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">
                     Community Building
                   </h3>
                   <p className="text-lg leading-relaxed">
@@ -71,8 +71,8 @@ export default function About() {
                     experiences.
                   </p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">
                     Awareness Campaigns
                   </h3>
                   <p className="text-lg leading-relaxed">
@@ -80,8 +80,8 @@ export default function About() {
                     encourage community involvement beyond our events.
                   </p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">
                     Inclusive Events
                   </h3>
                   <p className="text-lg leading-relaxed">
@@ -92,8 +92,8 @@ export default function About() {
               </div>
             </section>
 
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">Our Impact</h2>
+            <section className="mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Impact</h2>
               <p className="text-lg leading-relaxed mb-6">
                 Since our founding, we've organized numerous successful rallies,
                 bringing together hundreds of participants and raising thousands
@@ -109,7 +109,7 @@ export default function About() {
               </p>
             </section>
 
-            <section className="text-center bg-gray-50 p-8 rounded-lg mb-5">
+            <section className="text-center bg-gradient-to-br from-green-50 to-emerald-50 p-8 md:p-12 rounded-2xl mb-5 shadow-soft">
               <h2 className="text-3xl font-bold mb-4">Join Our Convoy</h2>
               <p className="text-lg leading-relaxed mb-6">
                 Ready to be part of something meaningful? Whether you drive a
@@ -131,10 +131,10 @@ export default function About() {
                   href="https://givebutter.com/convoy-for-a-cause"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-transform"
+                  className="btn-primary inline-flex items-center gap-2 text-lg"
                 >
                   <svg
-                    className="w-5 h-5 mr-2"
+                    className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >

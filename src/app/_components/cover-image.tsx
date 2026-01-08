@@ -16,9 +16,6 @@ const CoverImage = ({ title, src, slug, hero = false }: Props) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Debug: Log the image src
-  console.log("CoverImage src:", src);
-
   // If there's an error or no src, show a placeholder
   if (!src || imageError) {
     return (
@@ -53,8 +50,7 @@ const CoverImage = ({ title, src, slug, hero = false }: Props) => {
         width={1300}
         height={630}
         onLoad={() => setImageLoaded(true)}
-        onError={(e) => {
-          console.error("Image failed to load:", src, e);
+        onError={() => {
           setImageError(true);
         }}
         unoptimized={src.includes('supabase.co')} // Disable optimization for Supabase images temporarily

@@ -203,7 +203,7 @@ export default function Register() {
                 <p className="text-gray-500">Loading available events...</p>
               </div>
             ) : availableEvents.length > 0 ? (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
                 <h2 className="text-2xl font-bold mb-4">Available Events</h2>
                 <p className="text-gray-700 mb-4">
                   Choose which event you'd like to register for:
@@ -211,7 +211,7 @@ export default function Register() {
                 <select
                   value={selectedEventId}
                   onChange={(e) => setSelectedEventId(e.target.value)}
-                  className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-lg"
+                  className="w-full px-4 py-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 bg-white text-lg"
                   required
                 >
                   <option value="">Select an event...</option>
@@ -225,7 +225,7 @@ export default function Register() {
                   ))}
                 </select>
                 {selectedEventId && (
-                  <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
+                  <div className="mt-4 p-4 bg-white rounded-lg border border-green-200">
                     {(() => {
                       const selected = availableEvents.find(
                         (e) => e.id === selectedEventId
@@ -284,7 +284,7 @@ export default function Register() {
                       required
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -301,7 +301,7 @@ export default function Register() {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -318,7 +318,7 @@ export default function Register() {
                       required
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -335,7 +335,7 @@ export default function Register() {
                       required
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -352,7 +352,7 @@ export default function Register() {
                       required
                       value={formData.state}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                 </div>
@@ -382,7 +382,7 @@ export default function Register() {
                       placeholder="@username"
                       value={formData.instagram}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -399,7 +399,7 @@ export default function Register() {
                       placeholder="https://example.com"
                       value={formData.website}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                 </div>
@@ -425,7 +425,7 @@ export default function Register() {
                       max="2026"
                       value={formData.carYear}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -443,7 +443,7 @@ export default function Register() {
                       placeholder="e.g., Porsche, Toyota, Ford"
                       value={formData.carMake}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -461,7 +461,7 @@ export default function Register() {
                       placeholder="e.g., 911, Camry, Mustang"
                       value={formData.carModel}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                   <div>
@@ -479,7 +479,7 @@ export default function Register() {
                       placeholder="e.g., Alpine White, Red, Black"
                       value={formData.carColor}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     />
                   </div>
                 </div>
@@ -504,7 +504,7 @@ export default function Register() {
                       accept="image/*"
                       multiple
                       onChange={handlePhotoUpload}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                     />
                   </div>
                 )}
@@ -582,7 +582,7 @@ export default function Register() {
                         placeholder="Please list the rallies you've participated in..."
                         value={formData.previousRallies}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                       />
                     </div>
                   )}
@@ -613,7 +613,7 @@ export default function Register() {
                     placeholder="Tell us what draws you to this rally and how you align with our charitable mission..."
                     value={formData.whyJoin}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                   />
                 </div>
               </div>
@@ -628,7 +628,7 @@ export default function Register() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-colors"
+                  className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-colors"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Registration"}
                 </button>

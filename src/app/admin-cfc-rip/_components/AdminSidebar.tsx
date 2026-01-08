@@ -50,10 +50,10 @@ export default function AdminSidebar({ active }: { active?: string }) {
                 </div>
                 
                 <Link href="/admin-cfc-rip/events" onClick={() => setIsOpen(false)}>
-                    <span className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${active === "events" ? "bg-blue-100 text-blue-800" : "hover:bg-gray-100 text-gray-700"}`}>Events</span>
+                    <span className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${active === "events" ? "bg-green-100 text-green-800" : "hover:bg-gray-100 text-gray-700"}`}>Events</span>
                 </Link>
                 <Link href="/admin-cfc-rip/registrations" onClick={() => setIsOpen(false)}>
-                    <span className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${active === "registrations" ? "bg-blue-100 text-blue-800" : "hover:bg-gray-100 text-gray-700"}`}>Registrations</span>
+                    <span className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${active === "registrations" ? "bg-green-100 text-green-800" : "hover:bg-gray-100 text-gray-700"}`}>Registrations</span>
                 </Link>
                 
                 {/* User info and logout */}

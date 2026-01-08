@@ -22,7 +22,7 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Checking authentication...</p>
         </div>
       </div>
@@ -37,7 +37,7 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
           <p className="text-gray-600 mb-4">You need to be logged in to access this page.</p>
           <button 
             onClick={() => router.push('/admin-cfc-rip')}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
             Go to Login
           </button>

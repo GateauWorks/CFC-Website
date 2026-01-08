@@ -20,23 +20,31 @@ export function HeroPost({
   slug,
 }: Props) {
   return (
-    <section>
-      <div className="mb-4 md:mb-8">
+    <section className="mb-20 md:mb-32">
+      <div className="mb-6 md:mb-10 rounded-2xl overflow-hidden shadow-xl">
         <CoverImage title={title} src={coverImage} slug={slug} hero />
       </div>
-      <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-8 mb-20 md:mb-28">
-        <div>
-          <h3 className="mb-4 text-4xl lg:text-5xl leading-tight">
-            <Link href={`/posts/${slug}`} className="hover:underline">
+      <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-12">
+        <div className="mb-6 md:mb-0">
+          <div className="mb-4 text-sm font-semibold text-green-600 uppercase tracking-wide">
+            Featured Event
+          </div>
+          <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl leading-tight font-bold text-gray-900">
+            <Link 
+              href={`/posts/${slug}`} 
+              className="hover:text-green-600 transition-colors duration-200"
+            >
               {title}
             </Link>
-          </h3>
-          <div className="mb-4 md:mb-0 text-lg">
+          </h2>
+          <div className="mb-6 text-base text-gray-600 font-medium">
             <DateFormatter dateString={date} />
           </div>
         </div>
-        <div>
-          <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
+        <div className="flex items-center">
+          <p className="text-lg md:text-xl leading-relaxed text-gray-700">
+            {excerpt}
+          </p>
         </div>
       </div>
     </section>
